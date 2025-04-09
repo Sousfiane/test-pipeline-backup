@@ -1,0 +1,13 @@
+name: 010-diff-workflow
+
+on:
+  workflow_dispatch:
+
+jobs:
+  diff:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Send diff
+      run: diff (cat .\file.txt) (cat .\file_old.txt)
