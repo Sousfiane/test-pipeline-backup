@@ -1,7 +1,14 @@
 name: 010-diff-workflow
 
 on:
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      file_1 :
+        required: true
+        type: string
+      file_2 :
+        type: string
+        required: true
 
 jobs:
   diff:
@@ -10,4 +17,4 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Send diff
-      run: diff (cat .\file.txt) (cat .\file_old.txt)
+      run: diff (cat ${{ inputs.file_1 }}) (cat ${{ inputs.file_2 }})

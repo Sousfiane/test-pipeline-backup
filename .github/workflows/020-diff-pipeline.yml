@@ -1,0 +1,21 @@
+name: 020-diff-pipeline
+
+on:
+  workflow_dispatch:
+    inputs:
+      file_1 :
+        required: true
+        type: string
+      file_2 :
+        type: string
+        required: true
+
+jobs:
+  call_backup_workflow:
+    runs-on: windows-latest
+
+    steps: 
+      uses: ./010-diff-workflow.yml
+      with:
+        file_1:
+        file_2:
