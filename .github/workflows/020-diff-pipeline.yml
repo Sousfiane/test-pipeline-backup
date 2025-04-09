@@ -14,5 +14,5 @@ jobs:
   call_backup_workflow:
     uses: ./.github/workflows/010-diff-workflow.yml
     with:
-      file_1:
-      file_2:
+      file_1: ${{ inputs.file_1 }}
+      file_2: ${{ inputs.file_2 }}
