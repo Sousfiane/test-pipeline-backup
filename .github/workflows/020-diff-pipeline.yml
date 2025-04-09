@@ -12,8 +12,6 @@ on:
 
 jobs:
   call_backup_workflow:
-    runs-on: windows-latest
-
     uses: ./.github/workflows/010-diff-workflow.yml
     with:
       file_1:
