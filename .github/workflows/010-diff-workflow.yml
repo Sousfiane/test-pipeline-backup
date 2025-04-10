@@ -23,8 +23,6 @@ jobs:
         $last_backup_path = (gci ${{ inputs.backups_dir }} | sort LastWriteTime | select -last 1).FullName
         $last_backup = [System.IO.Compression.ZipFile]::OpenRead($last_backup_path)
 
-        echo "--- The last backup is $last_backup.Entries.First() ---"
-
         foreach ($entry in $last_backup.Entries) {
           if ($entry.FullName -like "*/file.txt") {
             $stream = $entry.Open()
@@ -33,7 +31,7 @@ jobs:
             $reader.Close()
             $stream.Close()
 
-            echo "--- Content of $($entry.FullName) ---"
+            echo "Content of $($entry.FullName):"
             echo $content
 
             $new_file_content = Get-Content ${{ inputs.new_file }}
