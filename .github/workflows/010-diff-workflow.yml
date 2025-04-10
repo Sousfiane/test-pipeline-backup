@@ -19,7 +19,7 @@ jobs:
     - name: Send diff
       run: |
         Add-Type -AssemblyName 'System.IO.Compression.FileSystem'
-        $last_backup = [System.IO.Compression.ZipFile]::OpenRead((gci ${{ inputs.backups_dir }} | sort LastWriteTime | select -last 1).FullName))
+        $last_backup = [System.IO.Compression.ZipFile]::OpenRead((gci ${{ inputs.backups_dir }} | sort LastWriteTime | select -last 1).FullName)
         echo "The last backup is $last_backup"
         foreach ($entry in $last_backup){
           if ($entry -like "file.txt") {
