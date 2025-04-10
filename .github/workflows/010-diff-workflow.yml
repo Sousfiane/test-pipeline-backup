@@ -22,7 +22,7 @@ jobs:
         $last_backup_path = (gci ${{ inputs.backups_dir }} | sort LastWriteTime | select -last 1).FullName
         $last_backup = [System.IO.Compression.ZipFile]::OpenRead($last_backup_path)
         echo "The last backup is $last_backup"
-        foreach ($entry in $last_backup){
+        foreach ($entry in $last_backup.Entries){
           if ($entry -like "file.txt") {
             diff (cat ${{ inputs.new_file}}) (cat $entry)
           }else {
