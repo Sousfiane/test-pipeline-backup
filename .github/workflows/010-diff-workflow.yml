@@ -43,7 +43,7 @@ jobs:
             if ($diff) {
               echo "Differences found between the new file and the backup file:"
               $diff_content = ""
-              $diff | ForEach-Object { $diff_content += "$_" + "`n" }
+              $diff | ForEach-Object { $diff_content += "$_" }
 
               echo $diff_content | Out-File -FilePath ./diff.log
               cat ./diff.log
