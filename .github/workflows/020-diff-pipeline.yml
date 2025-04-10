@@ -3,10 +3,10 @@ name: 020-diff-pipeline
 on:
   workflow_call:
     inputs:
-      file_1 :
+      new_file:
         required: true
         type: string
-      file_2 :
+      backup_archive:
         type: string
         required: true
 
@@ -14,5 +14,5 @@ jobs:
   call_backup_workflow:
     uses: ./.github/workflows/010-diff-workflow.yml
     with:
-      file_1: ${{ inputs.file_1 }}
-      file_2: ${{ inputs.file_2 }}
+      new_file: ${{ inputs.new_file }}
+      backup_archive: ${{ inputs.backup_archive }}

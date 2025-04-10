@@ -3,10 +3,10 @@ name: 010-diff-workflow
 on:
   workflow_call:
     inputs:
-      file_1 :
+      new_file:
         required: true
         type: string
-      file_2 :
+      backup_archive:
         type: string
         required: true
 
@@ -17,4 +17,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Send diff
-      run: diff (cat ${{ inputs.file_1 }}) (cat ${{ inputs.file_2 }})
+      run: |
+        Expand-Archive -Path ${{ inputs.backup_archive }} -DestinationPath ./backup_unzipped
+        diff (cat ${{ inputs.new_file}}) (cat ./backup_unzipped/file.txt)
