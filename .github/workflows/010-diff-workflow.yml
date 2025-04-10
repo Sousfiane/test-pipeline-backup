@@ -19,4 +19,4 @@ jobs:
     - name: Send diff
       run: |
         Expand-Archive -Path ${{ inputs.backup_archive }} -DestinationPath ./backup_unzipped
-        diff (cat ${{ inputs.new_file}}) (cat ./backup_unzipped/file.txt)
+        diff (cat ${{ inputs.new_file}}) (cat ./backup_unzipped/backup/file.txt)
