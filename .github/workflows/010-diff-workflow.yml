@@ -25,7 +25,6 @@ jobs:
         foreach ($entry in $last_backup.Entries){
           if ($entry -like "*/file.txt") {
             echo $entry.Open()
-            diff (cat ${{ inputs.new_file}}) $entry.Open()
           }else {
             echo "$entry is not file.txt"
             continue
