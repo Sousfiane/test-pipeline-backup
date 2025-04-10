@@ -18,6 +18,14 @@ jobs:
     - uses: actions/checkout@v3
     - name: Send diff
       run: |
-        cp ((gci ${{ inputs.backups_dir }} | sort LastWriteTime | select -last 1).FullName) ./last_backup_archive.zip
-        Expand-Archive -Path ./last_backup_archive.zip -DestinationPath ./backup_unzipped
-        diff (cat ${{ inputs.new_file}}) (cat ./backup_unzipped/backup_*/file.txt)
+        Add-Type -AssemblyName 'System.IO.Compression.FileSystem'
+        $last_backup = [System.IO.Compression.ZipFile]::OpenRead((gci ${{ inputs.backups_dir }} | sort LastWriteTime | select -last 1).FullName))
+        echo "The last backup is $last_backup"
+        foreach ($entry in $last_backup){
+          if ($entry -like "file.txt") {
+            diff (cat ${{ inputs.new_file}}) (cat $entry)
+          }else {
+            echo "$entry is not file.txt"
+            continue
+          }
+        }
