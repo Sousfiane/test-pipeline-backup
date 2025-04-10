@@ -20,4 +20,4 @@ jobs:
       run: |
         cp ((gci ${{ inputs.backups_dir }} | sort LastWriteTime | select -last 1).FullName) ./last_backup_archive.zip
         Expand-Archive -Path ./last_backup_archive.zip -DestinationPath ./backup_unzipped
-        diff (cat ${{ inputs.new_file}}) (cat ./backup_unzipped/backup/file.txt)
+        diff (cat ${{ inputs.new_file}}) (cat ./backup_unzipped/backup_*/file.txt)
