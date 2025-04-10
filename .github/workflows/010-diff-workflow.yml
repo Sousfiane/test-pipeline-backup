@@ -24,7 +24,7 @@ jobs:
         echo "The last backup is $last_backup"
         foreach ($entry in $last_backup.Entries){
           if ($entry -like "*/file.txt") {
-            diff (cat ${{ inputs.new_file}}) (cat $entry)
+            diff (cat ${{ inputs.new_file}}) (cat $entry.FullName)
           }else {
             echo "$entry is not file.txt"
             continue
