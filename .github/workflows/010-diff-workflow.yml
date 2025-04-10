@@ -24,7 +24,14 @@ jobs:
         echo "The last backup is $last_backup"
         foreach ($entry in $last_backup.Entries){
           if ($entry -like "*/file.txt") {
-            echo $entry.Open()
+            $stream = $entry.Open()
+            $reader = New-Object System.IO.StreamReader($stream)
+            $content = $reader.ReadToEnd()
+            $reader.Close()
+            $stream.Close()
+            echo "Content of $($entry.FullName):"
+            echo $content
+            diff (cat ${{ inputs.new_file}}) $content
           }else {
             echo "$entry is not file.txt"
             continue
