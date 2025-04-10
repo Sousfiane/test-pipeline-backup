@@ -20,12 +20,12 @@ jobs:
       run: |
         Add-Type -AssemblyName 'System.IO.Compression.FileSystem'
         $last_backup = [System.IO.Compression.ZipFile]::OpenRead((gci ${{ inputs.backups_dir }} | sort LastWriteTime | select -last 1).FullName)
-        echo "The last backup is $last_backup"
+        echo "The last backup is $last_backup.Name"
         foreach ($entry in $last_backup){
-          if ($entry -like "file.txt") {
+          if ($entry.Name -like "file.txt") {
             diff (cat ${{ inputs.new_file}}) (cat $entry)
           }else {
-            echo "$entry is not file.txt"
+            echo "$entry.Name is not file.txt"
             continue
           }
         }
