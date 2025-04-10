@@ -38,7 +38,7 @@ jobs:
 
           $new_file_content = Get-Content ${{ inputs.new_file }}
 
-          $diff = Compare-Object -ReferenceObject $new_file_content -DifferenceObject $content.Split("`n")
+          $diff = Compare-Object -ReferenceObject $new_file_content -DifferenceObject $content.Split("n")
 
           if ($diff) {
             echo "Differences found between the new file and the backup file:"
