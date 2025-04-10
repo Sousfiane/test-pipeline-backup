@@ -6,7 +6,7 @@ on:
       new_file:
         required: true
         type: string
-      backup_archive:
+      backups_dir:
         type: string
         required: true
 
@@ -15,4 +15,4 @@ jobs:
     uses: ./.github/workflows/010-diff-workflow.yml
     with:
       new_file: ${{ inputs.new_file }}
-      backup_archive: ${{ inputs.backup_archive }}
+      backups_dir: ${{ inputs.backups_dir }}
