@@ -19,13 +19,14 @@ jobs:
     - name: Send diff
       run: |
         Add-Type -AssemblyName 'System.IO.Compression.FileSystem'
-        $last_backup = [System.IO.Compression.ZipFile]::OpenRead((gci ${{ inputs.backups_dir }} | sort LastWriteTime | select -last 1).FullName)
-        echo "The last backup is $last_backup.Name"
+        $last_backup_path = (gci ${{ inputs.backups_dir }} | sort LastWriteTime | select -last 1).FullName
+        $last_backup = [System.IO.Compression.ZipFile]::OpenRead($last_backup_path)
+        echo "The last backup is $last_backup"
         foreach ($entry in $last_backup){
-          if ($entry.Name -like "file.txt") {
+          if ($entry -like "file.txt") {
             diff (cat ${{ inputs.new_file}}) (cat $entry)
           }else {
-            echo "$entry.Name is not file.txt"
+            echo "$entry is not file.txt"
             continue
           }
         }
