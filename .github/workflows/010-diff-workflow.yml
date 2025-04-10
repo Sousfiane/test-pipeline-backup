@@ -42,8 +42,8 @@ jobs:
 
           if ($diff) {
             echo "Differences found between the new file and the backup file:"
-            $diff | ForEach-Object { echo $_ && echo $_ > diff.log}
-            gci .
+            $diff | ForEach-Object { echo $_ && echo $_ > diff.log && ls}
+            
           } else {
             echo "No differences found."
             }
