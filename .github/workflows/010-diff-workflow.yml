@@ -7,8 +7,8 @@ on:
         required: true
         type: string
       backups_dir:
-        type: string
         required: true
+        type: string
 
 jobs:
   diff:
@@ -16,37 +16,41 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Send diff
+
+    - name: Extract file contents
       run: |
         Add-Type -AssemblyName 'System.IO.Compression.FileSystem'
 
-        $last_backup_path = (gci ${{ inputs.backups_dir }} | sort LastWriteTime | select -last 1).FullName
-        $last_backup = [System.IO.Compression.ZipFile]::OpenRead($last_backup_path)
-
-        foreach ($entry in $last_backup.Entries) {
+        $lastBackupPath = (Get-ChildItem "${{ inputs.backups_dir }}" | Sort-Object LastWriteTime | Select-Object -Last 1).FullName
+        $zip = [System.IO.Compression.ZipFile]::OpenRead($lastBackupPath)
+        
+        $backupContent = ""
+        foreach ($entry in $zip.Entries) {
           if ($entry.FullName -like "*/file.txt") {
-            $stream = $entry.Open()
-            $reader = New-Object System.IO.StreamReader($stream)
-            $content = $reader.ReadToEnd()
+            $reader = New-Object System.IO.StreamReader($entry.Open())
+            $backupContent = $reader.ReadToEnd()
             $reader.Close()
-            $stream.Close()
-
-            echo "Content of $($entry.FullName):"
-            echo $content
-
-            $new_file_content = Get-Content ${{ inputs.new_file }}
-
-            $diff = Compare-Object -ReferenceObject $new_file_content -DifferenceObject $content.Split("`n")
-
-            if ($diff) {
-              echo "Differences found between the new file and the backup file:"
-              echo $diff | Out-File -FilePath ./diff.log
-              cat ./diff.log
-            } else {
-              echo "No differences found."
-            }
-          } else {
-            echo "$entry is not file.txt"
-            continue
-            }
+            break
           }
+        }
+        $zip.Dispose()
+
+        $newFileContent = Get-Content "${{ inputs.new_file }}" -Raw
+
+        # Save both contents to environment variables
+        $backupEncoded = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($backupContent))
+        $newFileEncoded = [Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($newFileContent))
+
+        echo "BACKUP_CONTENT=$backupEncoded" >> $env:GITHUB_ENV
+        echo "NEW_FILE_CONTENT=$newFileEncoded" >> $env:GITHUB_ENV
+
+    - name: Run custom diff action
+      uses: Sousfiane/diff@v1
+      with:
+        old_file: ${{ env.BACKUP_CONTENT }}
+        new_file: ${{ env.NEW_FILE_CONTENT }}
+
+    - name: Print Output
+      id: output
+      run: echo "${{ steps.run-action.outputs.time }}"
+
