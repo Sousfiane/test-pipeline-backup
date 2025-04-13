@@ -45,7 +45,7 @@ jobs:
         echo "NEW_FILE_CONTENT=$newFileEncoded" >> $env:GITHUB_ENV
 
     - name: Run custom diff action
-      uses: Sousfiane/diff@v1.2
+      uses: Sousfiane/diff@v1.3
       with:
         old_file: ${{ env.BACKUP_CONTENT }}
         new_file: ${{ env.NEW_FILE_CONTENT }}
